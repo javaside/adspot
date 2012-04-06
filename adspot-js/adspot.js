@@ -2,6 +2,10 @@
 (function() {
 	var startAdspot =  function($){
 		
+		var initImg = function(img){
+			
+		};
+		
 		//查找所有图片(img),过滤不符合尺寸的图片
 		(function(){
 			$("img").each(function(i){
@@ -9,11 +13,11 @@
 				var width = _self.width();
 				var height = _self.height();
 				
-				alert(width + "x" + height);
+				if(width >= 100 && width <= 800 && height >= 50 && height <= 800){
+					initImg(_self);
+				}
 			});
 		})();
-		
-		
 	};
 	
 	(function() {

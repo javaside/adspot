@@ -1,0 +1,19 @@
+@CHARSET "UTF-8";
+
+.adsport-metadata-beacon{
+	display: none;
+	z-index: 175001!important;
+	position: absolute!important;
+	-moz-border-radius: 13px!important;
+	-webkit-border-radius: 13px!important;
+	border-radius: 13px!important;
+	top: 5px!important;
+	right: 5px!important;
+	left: auto!important;
+	bottom: auto!important;
+	margin: 0!important;
+	padding: 0!important;
+	border: none!important;
+	width: 25px!important;
+	height: 25px!important;
+}

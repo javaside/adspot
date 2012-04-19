@@ -1,19 +1,60 @@
 
 (function() {
 	var wbCode = window['__asspot_wb_code'];
+	var imgHost = "http://www.adspot.com/";
 	
 	var startAdspot =  function($){	
 		
+		//显示图片锚点和编辑点。
 		var showAdSpot =  function(img){
-			
+			var p = img.parent();
+			p.find(".adSpotBeaconImg").show();
+			p.find(".adSpotProductDot").show();
 		}
 		
+		//隐藏图片锚点和编辑点
 		var hideAdSpot = function(img){
+			var p = img.parent();
+			p.find(".adSpotBeaconImg").hide();
+			p.find(".adSpotProductDot").hide();
+		}
+		
+		//获取该图的锚点
+		var getProductDots = function(img){
+			return {dots:[{left:20,top:30},{left:10,top:80},{left:90,top:100}]};
+		}
+		
+		//包装图片的锚点
+		var wrapperProductDots = function(img){
+			var dotObjs = getProductDots(img);
 			
+			if(dotObjs.dots){
+				$.each(dotObjs.dots, function(i, addot){
+					var left = addot.left;
+					var top = addot.top;
+					var dotImg = "<img class='adSpotProductDot' style='display:none;z-index:1699;position:absolute;margin:0px;padding:0px;left:" + left + "px;top:" + top + "px;' src='" + imgHost + "/adspot-js/imgs/product.png'>";
+					img.after(dotImg);
+				});
+			}
+		}
+		
+		//包装图片
+		var wrapperImg = function(img){
+			var width = img.width();
+			var height = img.height();
+			
+			var divWrap = "<div class='adSpotImgWrap' style='width:" + width + "px;height:" + height + "px;position: relative; margin:0px;float: none; padding:0px'></div>";
+		    var beaconImg = "<img class='adSpotBeaconImg' style='display:none;z-index:1700;position:absolute;margin:0px;padding:0px;top:5px;right:5px;' src='" + imgHost +"/adspot-js/imgs/metadata-beacon.png'>";
+		    
+			img.wrap(divWrap);
+			wrapperProductDots(img);
+			img.after(beaconImg);
 		}
 		
 		//初始化图的锚点
 		var initImg = function(img){
+			wrapperImg(img);
+			
 			img.hover(
 					function(){
 						showAdSpot(img);
@@ -40,7 +81,7 @@
 	};
 	
 	(function() {
-		if(!wbCode){return;};
+		if(!wbCode || wbCode.length != 8){return;};
 		
 		var jqueryScript, clearFn;
 		if(typeof jQuery !== "undefined" && jQuery.fn.jquery === "1.7.1"){

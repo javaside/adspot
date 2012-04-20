@@ -1,7 +1,7 @@
 
 (function() {
 	var wbCode = window['__asspot_wb_code'];
-	var imgHost = "http://www.adspot.com/";
+	var imgHost = "http://js.adspot.com/";
 	
 	var startAdspot =  function($){	
 		
@@ -32,7 +32,7 @@
 				$.each(dotObjs.dots, function(i, addot){
 					var left = addot.left;
 					var top = addot.top;
-					var dotImg = "<img class='adSpotProductDot' style='display:none;z-index:1699;position:absolute;margin:0px;padding:0px;left:" + left + "px;top:" + top + "px;' src='" + imgHost + "/adspot-js/imgs/product.png'>";
+					var dotImg = "<img class='adSpotProductDot' style='display:none;z-index:1699;position:absolute;margin:0px;padding:0px;left:" + left + "px;top:" + top + "px;' src='" + imgHost + "/res/product.png'>";
 					img.after(dotImg);
 				});
 			}
@@ -44,7 +44,7 @@
 			var height = img.height();
 			
 			var divWrap = "<div class='adSpotImgWrap' style='width:" + width + "px;height:" + height + "px;position: relative; margin:0px;float: none; padding:0px'></div>";
-		    var beaconImg = "<img class='adSpotBeaconImg' style='display:none;z-index:1700;position:absolute;margin:0px;padding:0px;top:5px;right:5px;' src='" + imgHost +"/adspot-js/imgs/metadata-beacon.png'>";
+		    var beaconImg = "<img class='adSpotBeaconImg' style='display:none;z-index:1700;position:absolute;margin:0px;padding:0px;top:5px;right:5px;' src='" + imgHost +"/res/metadata-beacon.png'>";
 		    
 			img.wrap(divWrap);
 			wrapperProductDots(img);

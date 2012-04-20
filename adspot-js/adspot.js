@@ -55,7 +55,7 @@
 		var initImg = function(img){
 			wrapperImg(img);
 			
-			img.hover(
+			img.parent().hover(
 					function(){
 						showAdSpot(img);
 					},

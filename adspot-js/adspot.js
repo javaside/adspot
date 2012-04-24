@@ -48,7 +48,7 @@
 			var width = img.width();
 			var height = img.height();
 			
-			var divWrap = "<div class='adSpotImgWrap' style='width:" + width + "px;height:" + height + "px;position: relative; margin:0px;float: none; padding:0px'></div>";
+			var divWrap = "<div class='adSpotImgWrap' style='width:" + width + "px;height:" + height + "px;position: relative; margin:0px;float: none; padding:0px;display:inline-block;'></div>";
 		    var beaconImg = "<img class='adSpotBeaconImg' style='display:none;z-index:1700;position:absolute;margin:0px;padding:0px;top:5px;right:5px;' src='" + imgHost +"res/metadata-beacon.png'>";
 		    
 			img.wrap(divWrap);

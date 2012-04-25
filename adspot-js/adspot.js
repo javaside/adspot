@@ -46,7 +46,7 @@
 		}
 		
 		var bindCreateAdspotEvent = function(img){
-			img.die().live('click', function(e){
+			img.click(function(e){
 				var left = e.pageX - img.offset().left - 12;//e.originalEvent.x - img.offset().left || e.originalEvent.layerX - img.offset().left || 0;//获取当前鼠标相对img的x坐标
 			    var top  = e.pageY - img.offset().top - 12;//e.originalEvent.y - img.offset().top  || e.originalEvent.layerY - img.offset().top  || 0;//获取当前鼠标相对img的y坐标
 			    
@@ -61,7 +61,7 @@
 		
 		var unbindCreateAdspotEvent = function(img){
 			img.css('cursor','default');
-			img.die();
+			img.unbind('click');
 			console.log('unbind.');
 		}
 
@@ -70,7 +70,7 @@
 		 * 绑定左上角的编辑按钮事件。
 		 */
 		var bindEditSpotDivClick = function(img){
-			$(".adSpotImgWrap .editSpotDiv").click(function(e){
+			img.parent().find(".editSpotDiv").click(function(e){
 				var _self = $(this);
 				var name = _self.attr("name");
 				
@@ -103,6 +103,7 @@
 		    
 			img.wrap(divWrap);
 			wrapperProductDots(img);
+			
 			img.after(logoTagImg);
 			img.after(editSpotDiv);
 			
@@ -123,7 +124,6 @@
 						hideAdSpot(img);
 					}
 			);
-		
 		};
 		
 		//查找所有图片(img),过滤不符合尺寸的图片

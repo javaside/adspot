@@ -8,12 +8,12 @@
 	display:inline-block;
 }
 
-.adspot_btn_add_dot,.adspot_btn_logo,.adspot_icon_product,.adspot_icon_link,.adspot_layer_info
+.adspot_btn_add_dot,.adspot_btn_logo,.adspot_icon_product,.adspot_icon_link,.adspot_layer_info,.adspot_icon_space
 	{
 	position: absolute;
 }
 
-.adspot_icon_product,.adspot_icon_link,.adspot_btn_add_dot a {
+.adspot_icon_space,.adspot_icon_product,.adspot_icon_link,.adspot_btn_add_dot a {
 	width: 26px;
 	height: 26px;
 	background: url(res/sprite.png) left top no-repeat;
@@ -52,10 +52,17 @@
 
 .adspot_icon_product {
 	background-position: -52px top;
+	z-index: 1699;
+}
+
+.adspot_icon_space {
+	background-position: -106px top;
+	z-index: 1699;
 }
 
 .adspot_icon_link {
 	background-position: -78px top;
+	z-index: 1699;
 }
 
 .adspot_layer_info a {

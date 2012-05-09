@@ -5,6 +5,52 @@
 	
 	var startAdspot =  function($){	
 		
+		/**
+		 * 构建增加spot表单DIV
+		 */
+		var getAddEditSpotFormDiv = function(){
+			var spotForm = '<div class="adspot_layer_info">' +
+						   '<div class="adspot_layer_inner">' +
+						   '<div class="adspot_tab"><a class="adspot_tab1 adspot_tab_selected" href="#"><i></i>商品锚点</a><a class="adspot_tab2" href="#"><i class="adspot_i2"></i>链接锚点</a></div>' + 
+						   '<div class="adspot_tab_con">' +
+						   '<label>请输入你要链接的商品关键字</label>' +
+						   '<input type="text" placeholder="比如：婚纱、地毯等"></div></div>' +
+						   '<div style="display: block; opacity: 1;" class="adspot_search_box">' +
+						   '<div style="display: none;" class="adspot_search_noresult"><p>你要寻找的商品不存在，请试试其他关键字 </p>' +
+						   '或者 <a href="#" class="adspot_edit_btn adspot_add_btn"><i></i> 添加商品</a></div>' +
+						   '<div style="display: none;" class="adspot_search_loader">' +
+						   '<img src="res/spinner-white.gif" alt="ajax spinner" class="adspot_search_spinner">' +
+						   '</div>' +
+						   '<ul style="display: block;" class="adspot_search_items">' +
+						   '<li><img src="res/pro.jpg" class="adspot_search_image">' +
+						   '<div class="adspot_search_info"><h2>珠光纸婚礼鸾凤</h2><p>￥35.2</p><p>淘宝网</p></div></li>' +
+						   '<li><img src="res/pro.jpg" class="adspot_search_image">' +
+						   '<div class="adspot_search_info"><h2>珠光纸婚礼鸾凤</h2><p>￥35.2</p><p>淘宝网</p></div></li>' +
+						   '<li><img src="res/pro.jpg" class="adspot_search_image">' +
+						   '<div class="adspot_search_info"><h2>珠光纸婚礼鸾凤</h2><p>￥35.2</p><p>淘宝网</p></div></li>' +
+						   '<li><img src="res/pro.jpg" class="adspot_search_image">' +
+						   '<div class="adspot_search_info"><h2>珠光纸婚礼鸾凤</h2><p>￥35.2</p><p>淘宝网</p></div></li>' +
+						   '<li class="adspot_search_addproduct"><p>找不到你需要的商品?</p> <a href="#" class="adspot_edit_btn adspot_add_btn"><i></i> 添加商品</a></li>' +
+						   '</ul>' +
+						   '</div>'	+
+						   '<div class="adspot_tab_action"><a title="取消" class="adspot_edit_btn cancel">取 消</a><a title="确定" class="adspot_edit_btn submit">确 定</a></div>' +
+						   '</div>';
+			return spotForm;
+			
+		}
+		
+		/**
+		 * 链接广告DIV
+		 */
+		var getLinkSpotDiv = function(){
+			var div = '<div style="left:170px;top:40px" class="adspot_layer_info adspot_link">' +
+					  '<div class="adspot_layer_inner1">' +
+					  '<img class="adspot_link_pic" src="pro.jpg">' +
+					  '<a class="adspot_link_info" href="#"><p>这个真心不错，很简洁的，就是盒子的颜色太淡了。用在婚礼上我觉得还不够喜庆，平时见了真是我的菜啊。淡淡地珠光很漂亮啊，在这个和另一款粉色薰衣草中犹豫好久的</p></a></div>' +
+					  '</div>';
+			return div;
+		}
+		
 		//显示图片锚点和编辑点。
 		var showAdSpot =  function(img){
 			var p = img.parent();
@@ -59,8 +105,11 @@
 			});
 			
 			warDiv.find(".adspot_tab_action .submit").click(function(){
+				var warDiv = $(this).parent().parent().parent();
 				warDiv.find(".adspot_icon_space").attr("class", "adspot_icon_link");
 				warDiv.find("div.adspot_layer_info").hide();
+				bindCreateAdspotEvent(warDiv.find("img.adSpotImgWrap"));
+				bindSoptHoverEvent(warDiv.find("img.adSpotImgWrap"));
 			});
 		}
 		
@@ -133,39 +182,6 @@
 				);
 		}
 		
-		/**
-		 * 构建增加spot表单DIV
-		 */
-		var getAddEditSpotFormDiv = function(){
-			var spotForm = '<div class="adspot_layer_info">' +
-						   '<div class="adspot_layer_inner">' +
-						   '<div class="adspot_tab"><a class="adspot_tab1 adspot_tab_selected" href="#"><i></i>商品锚点</a><a class="adspot_tab2" href="#"><i class="adspot_i2"></i>链接锚点</a></div>' + 
-						   '<div class="adspot_tab_con">' +
-						   '<label>请输入你要链接的商品关键字</label>' +
-						   '<input type="text" placeholder="比如：婚纱、地毯等"></div></div>' +
-						   '<div style="display: block; opacity: 1;" class="adspot_search_box">' +
-						   '<div style="display: none;" class="adspot_search_noresult"><p>你要寻找的商品不存在，请试试其他关键字 </p>' +
-						   '或者 <a href="#" class="adspot_edit_btn adspot_add_btn"><i></i> 添加商品</a></div>' +
-						   '<div style="display: none;" class="adspot_search_loader">' +
-						   '<img src="res/spinner-white.gif" alt="ajax spinner" class="adspot_search_spinner">' +
-						   '</div>' +
-						   '<ul style="display: block;" class="adspot_search_items">' +
-						   '<li><img src="res/pro.jpg" class="adspot_search_image">' +
-						   '<div class="adspot_search_info"><h2>珠光纸婚礼鸾凤</h2><p>￥35.2</p><p>淘宝网</p></div></li>' +
-						   '<li><img src="res/pro.jpg" class="adspot_search_image">' +
-						   '<div class="adspot_search_info"><h2>珠光纸婚礼鸾凤</h2><p>￥35.2</p><p>淘宝网</p></div></li>' +
-						   '<li><img src="res/pro.jpg" class="adspot_search_image">' +
-						   '<div class="adspot_search_info"><h2>珠光纸婚礼鸾凤</h2><p>￥35.2</p><p>淘宝网</p></div></li>' +
-						   '<li><img src="res/pro.jpg" class="adspot_search_image">' +
-						   '<div class="adspot_search_info"><h2>珠光纸婚礼鸾凤</h2><p>￥35.2</p><p>淘宝网</p></div></li>' +
-						   '<li class="adspot_search_addproduct"><p>找不到你需要的商品?</p> <a href="#" class="adspot_edit_btn adspot_add_btn"><i></i> 添加商品</a></li>' +
-						   '</ul>' +
-						   '</div>'	+
-						   '<div class="adspot_tab_action"><a title="取消" class="adspot_edit_btn cancel">取 消</a><a title="确定" class="adspot_edit_btn submit">确 定</a></div>' +
-						   '</div>';
-			return spotForm;
-			
-		}
 		
 		//包装图片
 		var wrapperImg = function(img){

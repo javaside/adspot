@@ -42,10 +42,10 @@
 		/**
 		 * 链接广告DIV
 		 */
-		var getLinkSpotDiv = function(){
-			var div = '<div style="left:170px;top:40px" class="adspot_layer_info adspot_link">' +
+		var getLinkSpotDiv = function(spot){
+			var div = '<div style="left:170px;top:40px" class="adspot_layer_info adspot_link" spot-div-id=' + spot.id +'>' +
 					  '<div class="adspot_layer_inner1">' +
-					  '<img class="adspot_link_pic" src="pro.jpg">' +
+					  '<img class="adspot_link_pic" src="res/pro.jpg">' +
 					  '<a class="adspot_link_info" href="#"><p>这个真心不错，很简洁的，就是盒子的颜色太淡了。用在婚礼上我觉得还不够喜庆，平时见了真是我的菜啊。淡淡地珠光很漂亮啊，在这个和另一款粉色薰衣草中犹豫好久的</p></a></div>' +
 					  '</div>';
 			return div;
@@ -69,12 +69,12 @@
 		
 		//获取该图的锚点
 		var getProductDots = function(img){
-			return {dots:[{left:20,top:30},{left:10,top:80},{left:90,top:100}]};
+			return {dots:[{id:1,left:20,top:30},{id:2,left:10,top:80},{id:3,left:90,top:100}]};
 		}
 		
-		var addDotImgDiv = function(left, top, clas, show){
+		var addDotImgDiv = function(spot, clas, show){
 			var display = (show) ? "display:block;" : "display:none;";
-			return "<div class='" + clas + "' style='" + display + "left:" + left + "px;top:" + top + "px;opacity:0.7;'></div>";
+			return "<div class='" + clas + "' style='" + display + "left:" + spot.left + "px;top:" + spot.top + "px;opacity:0.7;' adsopt-product-id='" + spot.id + "'></div>";
 		}
 		
 		//包装图片的锚点
@@ -82,11 +82,11 @@
 			var dotObjs = getProductDots(img);
 			
 			if(dotObjs.dots){
-				$.each(dotObjs.dots, function(i, addot){
-					var left = addot.left;
-					var top = addot.top;
-					var dotImg = addDotImgDiv(left, top, "adspot_icon_link", false);
+				$.each(dotObjs.dots, function(i, spot){
+					var dotImg = addDotImgDiv(spot, "adspot_icon_link", false);
 					img.after(dotImg);
+					
+					$(document.body).append(getLinkSpotDiv(spot));
 				});
 			}
 		}
@@ -121,7 +121,10 @@
 				var left = e.pageX - img.offset().left -12;//e.originalEvent.x - img.offset().left || e.originalEvent.layerX - img.offset().left || 0;//获取当前鼠标相对img的x坐标
 			    var top  = e.pageY - img.offset().top -12;//e.originalEvent.y - img.offset().top  || e.originalEvent.layerY - img.offset().top  || 0;//获取当前鼠标相对img的y坐标
 			    
-			    var dotImg = addDotImgDiv(left, top, "adspot_icon_space", true);
+			    var spot = {};
+			    spot.left = left;
+			    spot.top = top;
+			    var dotImg = addDotImgDiv(spot, "adspot_icon_space", true);
 			    img.after(dotImg);
 			    
 			    var addDiv = img.parent().find(".adspot_layer_info");
@@ -174,10 +177,14 @@
 			wraDiv.find("div.adspot_icon_link").hover(
 					function(){
 						$(this).css("opacity", "1");
+						var id = $(this).attr("adsopt-product-id");
+						$("div[spot-div-id=" + id + "]").show();
 					}
 					,
 					function(){
 						$(this).css("opacity", "0.7");
+						var id = $(this).attr("adsopt-product-id");
+						$("div[spot-div-id=" + id + "]").hide();
 					}
 				);
 		}

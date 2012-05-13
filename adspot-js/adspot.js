@@ -51,11 +51,35 @@
 			return div;
 		}
 		
+		/**
+		 * 产品类型广告DIV
+		 */
+		var getProductSpotDiv = function(spot){
+			var div = '<div style="left:20px;top:230px" class="adspot_layer_info" spot-div-id=' + spot.id +'>' + 
+					  '<div class="adspot_layer_inner1">' +
+					  '<div class="adspot_layer_left"><img alt="产品图片" src="res/pro.jpg"></div>' +
+					  '<div class="adspot_layer_right"><h1>珠光纸婚礼鸾凤和鸣喜糖盒</h1>' +
+					  '<div class="adspot_layer_price"><label>购买价格：</label>￥35.2</div>' +
+					  '<div class="adspot_layer_source"><label>信息来源：</label>淘宝网</div>' +
+					  '<div class="adspot_layer_shop"><a href="#" class="adspot_edit_btn adspot_buy_btn"><i></i> 购买链接</a></div>' +
+					  '</div><div class="clear"></div></div></div>';
+			
+			return div;
+		}
+		
+		var getSpotDiv = function(spot){
+			if(spot.type === "LINK"){
+				return getLinkSpotDiv(spot);
+			}else{
+				return getProductSpotDiv(spot);
+			}
+		}
+		
 		//显示图片锚点和编辑点。
 		var showAdSpot =  function(img){
 			var p = img.parent();
 			p.find(".adspot_btn_logo").show();
-			p.find(".adspot_icon_link").show();
+			p.find(".adspot_icon").show();
 			p.find(".adspot_btn_add_dot").show();
 		}
 		
@@ -63,18 +87,19 @@
 		var hideAdSpot = function(img){
 			var p = img.parent();
 			p.find(".adspot_btn_logo").hide();
-			p.find(".adspot_icon_link").hide();
+			p.find(".adspot_icon").hide();
 			p.find(".adspot_btn_add_dot").hide();
 		}
 		
 		//获取该图的锚点
 		var getProductDots = function(img){
-			return {dots:[{id:1,left:20,top:30},{id:2,left:10,top:80},{id:3,left:90,top:100}]};
+			return {dots:[{id:1,left:20,top:30,type:'LINK'},{id:2,left:10,top:80,type:'PDCT'},{id:3,left:90,top:100,type:'LINK'}]};
 		}
 		
-		var addDotImgDiv = function(spot, clas, show){
+		var addDotImgDiv = function(spot, show){
 			var display = (show) ? "display:block;" : "display:none;";
-			return "<div class='" + clas + "' style='" + display + "left:" + spot.left + "px;top:" + spot.top + "px;opacity:0.7;' adsopt-product-id='" + spot.id + "'></div>";
+			var clas = (spot.type === "LINK") ? "adspot_icon_link" : ((spot.type === "PDCT") ? "adspot_icon_product" : "adspot_icon_space");
+			return "<div class='adspot_icon " + clas + "' style='" + display + "left:" + spot.left + "px;top:" + spot.top + "px;opacity:0.7;' adsopt-product-id='" + spot.id + "'></div>";
 		}
 		
 		//包装图片的锚点
@@ -83,10 +108,10 @@
 			
 			if(dotObjs.dots){
 				$.each(dotObjs.dots, function(i, spot){
-					var dotImg = addDotImgDiv(spot, "adspot_icon_link", false);
+					var dotImg = addDotImgDiv(spot, false);
 					img.after(dotImg);
 					
-					$(document.body).append(getLinkSpotDiv(spot));
+					$(document.body).append(getSpotDiv(spot));
 				});
 			}
 		}
@@ -124,7 +149,9 @@
 			    var spot = {};
 			    spot.left = left;
 			    spot.top = top;
-			    var dotImg = addDotImgDiv(spot, "adspot_icon_space", true);
+			    spot.type = "SPACE";
+			    
+			    var dotImg = addDotImgDiv(spot, true);
 			    img.after(dotImg);
 			    
 			    var addDiv = img.parent().find(".adspot_layer_info");
@@ -178,9 +205,11 @@
 		var bindShowSpotEvent = function(pId){
 			pId.hover(
 					function(){
+						//show-flag = 1表示，该DIV真正显示
 						pId.attr("show-flag", "1");
 					},
 					function(){
+						//show-flag = 0表示，该DIV已隐藏
 						pId.attr("show-flag","0");
 						pId.slideUp();
 					}
@@ -192,7 +221,7 @@
 		 */
 		var bindSoptHoverEvent = function(img){
 			var wraDiv = img.parent();
-			wraDiv.find("div.adspot_icon_link").hover(
+			wraDiv.find("div.adspot_icon").hover(
 					function(){
 						$(this).css("opacity", "1");
 						
@@ -201,7 +230,6 @@
 						var pIdDiv = $("div[spot-div-id=" + id + "]");
 						
 						bindShowSpotEvent(pIdDiv);
-						//pId.attr("show-flag", "1");
 						
 						pIdDiv.css({left:offset.left + 20, top:offset.top + 20}).slideDown();		
 					}

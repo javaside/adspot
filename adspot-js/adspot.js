@@ -169,6 +169,24 @@
 			});
 		}
 		
+		
+		
+		
+		/**
+		 * 绑定展示广告事件
+		 */
+		var bindShowSpotEvent = function(pId){
+			pId.hover(
+					function(){
+						pId.attr("show-flag", "1");
+					},
+					function(){
+						pId.attr("show-flag","0");
+						pId.slideUp();
+					}
+			);
+		}
+		
 		/**
 		 * 绑定锚点悬浮事件
 		 */
@@ -177,17 +195,35 @@
 			wraDiv.find("div.adspot_icon_link").hover(
 					function(){
 						$(this).css("opacity", "1");
+						
+						var offset = $(this).offset();
 						var id = $(this).attr("adsopt-product-id");
-						$("div[spot-div-id=" + id + "]").show();
+						var pIdDiv = $("div[spot-div-id=" + id + "]");
+						
+						bindShowSpotEvent(pIdDiv);
+						//pId.attr("show-flag", "1");
+						
+						pIdDiv.css({left:offset.left + 20, top:offset.top + 20}).slideDown();		
 					}
 					,
 					function(){
 						$(this).css("opacity", "0.7");
+						
 						var id = $(this).attr("adsopt-product-id");
-						$("div[spot-div-id=" + id + "]").hide();
+						var pIdDiv = $("div[spot-div-id=" + id + "]");
+						
+						setTimeout(function(){
+							var pIdDiv = $("div[spot-div-id=" + id + "]");
+
+							if(pIdDiv.attr("show-flag") !== "1"){
+								pIdDiv.attr("show-flag","0");
+								pIdDiv.slideUp();
+							}
+						},200);
 					}
 				);
 		}
+		
 		
 		
 		//包装图片

@@ -142,7 +142,7 @@
 				var adTab = warDiv.find(".adspot_layer_info .adspot_layer_inner .adspot_tab .adspot_tab_selected");
 				var adspotType = adTab.hasClass("adspot_tab2") ? "adspot_icon_link" : "adspot_icon_product";
 				
-				warDiv.find(".adspot_icon_space").attr("class", adspotType);
+				warDiv.find(".adspot_icon_space").attr("class", "adspot_icon " + adspotType);
 				warDiv.find("div.adspot_layer_info").hide();
 				
 				bindCreateAdspotEvent(warDiv.find("img.adSpotImgWrap"));

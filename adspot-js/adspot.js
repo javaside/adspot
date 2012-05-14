@@ -11,10 +11,18 @@
 		var getAddEditSpotFormDiv = function(){
 			var spotForm = '<div class="adspot_layer_info">' +
 						   '<div class="adspot_layer_inner">' +
-						   '<div class="adspot_tab"><a class="adspot_tab1 adspot_tab_selected" href="#"><i></i>商品锚点</a><a class="adspot_tab2" href="#"><i class="adspot_i2"></i>链接锚点</a></div>' + 
-						   '<div class="adspot_tab_con">' +
+						   '<div class="adspot_tab"><a class="adspot_tab1 adspot_tab_selected"><i></i>商品锚点</a><a class="adspot_tab2"><i class="adspot_i2"></i>链接锚点</a></div>' + 
+						   '<div class="adspot_tab_con tab_con_product">' +
 						   '<label>请输入你要链接的商品关键字</label>' +
-						   '<input type="text" placeholder="比如：婚纱、地毯等"></div></div>' +
+						   '<input type="text" placeholder="比如：婚纱、地毯等"></div>' +
+						   '<div class="adspot_tab_con tab_con_link" style="display:none;">' +
+						   '<label>链接地址：</label>' +
+						   '<input type="text" placeholder="请输入链接地址">' +
+						   '<label>特色图片：</label>' +
+						   '<input type="text" placeholder="输入图片的URL">' +
+						   '<label>一句话描述：</label>' +
+						   '<textarea placeholder="请输入描述" type="text"></textarea></div>' +
+						   '</div>' +
 						   '<div style="display: block; opacity: 1;" class="adspot_search_box">' +
 						   '<div style="display: none;" class="adspot_search_noresult"><p>你要寻找的商品不存在，请试试其他关键字 </p>' +
 						   '或者 <a href="#" class="adspot_edit_btn adspot_add_btn"><i></i> 添加商品</a></div>' +
@@ -131,8 +139,12 @@
 			
 			warDiv.find(".adspot_tab_action .submit").click(function(){
 				var warDiv = $(this).parent().parent().parent();
-				warDiv.find(".adspot_icon_space").attr("class", "adspot_icon_link");
+				var adTab = warDiv.find(".adspot_layer_info .adspot_layer_inner .adspot_tab .adspot_tab_selected");
+				var adspotType = adTab.hasClass("adspot_tab2") ? "adspot_icon_link" : "adspot_icon_product";
+				
+				warDiv.find(".adspot_icon_space").attr("class", adspotType);
 				warDiv.find("div.adspot_layer_info").hide();
+				
 				bindCreateAdspotEvent(warDiv.find("img.adSpotImgWrap"));
 				bindSoptHoverEvent(warDiv.find("img.adSpotImgWrap"));
 			});
@@ -196,8 +208,34 @@
 			});
 		}
 		
-		
-		
+		/**
+		 * 绑定打点时product,link类型切换
+		 */
+		var bindAddSpotDivTabClick = function(img){
+			var wraDiv = img.parent();
+			
+			wraDiv.find("div.adspot_layer_info .adspot_layer_inner .adspot_tab .adspot_tab1").click(function(){
+				var layerInfoDiv = $(this).parent().parent().parent();
+				
+				layerInfoDiv.find(".adspot_layer_inner .adspot_tab2").removeClass("adspot_tab_selected");
+				layerInfoDiv.find(".adspot_layer_inner .tab_con_link").hide();
+				
+				$(this).addClass("adspot_tab_selected");
+				layerInfoDiv.find(".adspot_layer_inner .tab_con_product").show();
+				layerInfoDiv.find(".adspot_search_box").show();
+			});
+			
+			wraDiv.find("div.adspot_layer_info .adspot_layer_inner .adspot_tab .adspot_tab2").click(function(){
+				var layerInfoDiv = $(this).parent().parent().parent();
+				
+				layerInfoDiv.find(".adspot_layer_inner .adspot_tab1").removeClass("adspot_tab_selected");
+				layerInfoDiv.find(".adspot_layer_inner .tab_con_product").hide();
+				layerInfoDiv.find(".adspot_search_box").hide();
+				
+				$(this).addClass("adspot_tab_selected");
+				layerInfoDiv.find(".adspot_layer_inner .tab_con_link").show();
+			});
+		}
 		
 		/**
 		 * 绑定展示广告事件
@@ -274,6 +312,7 @@
 			
 			bindAddSpotDivClick(img);
 			bindSoptHoverEvent(img);
+			bindAddSpotDivTabClick(img);
 		}
 	
 				

@@ -1,9 +1,7 @@
 
 (function() {
 	var wbCode = window['__adspot_wb_code'];
-	var defaultResHost = "http://js.adspot.com/";
 	var resHost = window['__adspot_res_host'];
-	resHost = resHost ? resHost:defaultResHost;
 	
 	var startAdspot =  function($){	
 		

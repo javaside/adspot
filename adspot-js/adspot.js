@@ -82,7 +82,7 @@
 					  '<div class="adspot_layer_right"><h1>珠光纸婚礼鸾凤和鸣喜糖盒</h1>' +
 					  '<div class="adspot_layer_price"><label>购买价格：</label>￥35.2</div>' +
 					  '<div class="adspot_layer_source"><label>信息来源：</label>淘宝网</div>' +
-					  '<div class="adspot_layer_shop"><a href="#" class="adspot_edit_btn adspot_buy_btn adspot_green_btn"><i></i>购买</a></div>' +
+					  '<div class="adspot_layer_shop"><a class="adspot_edit_btn adspot_buy_btn adspot_green_btn"><i></i> 购买</a></div>' +
 					  '</div><div class="clear"></div>' + 
 					  '<div class="adspot_edit_area"><a title="编辑信息" class="adspot_edit_btn adspot_edit_"><i></i></a><a title="删除锚点" class="adspot_edit_btn adspot_edit_edit adspot_edit_delete"><i></i></a></div>' +
 					  '</div></div>';

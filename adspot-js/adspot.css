@@ -8,12 +8,12 @@
 	display:inline-block;
 }
 
-.adspot_btn_add_dot,.adspot_btn_logo,.adspot_icon_product,.adspot_icon_link,.adspot_layer_info,.adspot_icon_space
+.adspot_btn_add_dot,.adspot_btn_logo,.adspot_icon_product,.adspot_icon_link,.adspot_layer_info,.adspot_icon_space,.adspot_search_btn
 	{
 	position: absolute;
 }
 
-.adspot_icon_space,.adspot_icon_product,.adspot_icon_link,.adspot_btn_add_dot a {
+.adspot_icon_space,.adspot_icon_product,.adspot_icon_link,.adspot_btn_add_dot a,.adspot_search_btn {
 	width: 26px;
 	height: 26px;
 	background: url(res/sprite.png) left top no-repeat;
@@ -64,6 +64,18 @@
 	background-position: -78px top;
 	z-index: 1699;
 }
+
+.adspot_search_btn {
+	background-position: -132px top;
+	right: 4px;
+	top: 20px;
+	opacity: 0.8
+}
+
+.adspot_search_btn:hover {
+	opacity: 1
+}
+
 
 .adspot_layer_info a {
 	text-decoration: none;
@@ -204,10 +216,26 @@
 	margin-right: 3px;
 }
 
+a.adspot_green_btn {
+	border: 1px solid #337b00;
+	border-radius: 2px;
+	background: -moz-linear-gradient(#50be02, #3f9701);
+	background: -webkit-linear-gradient(#50be02, #3f9701);
+	color: #fff
+}
+
 .adspot_edit_btn:hover,.adspot_edit_edit:hover,.adspot_tab1:hover,.adspot_tab2:hover
 	{
 	background: -moz-linear-gradient(center top, white, #DEDEDE);
 	border: 1px solid #a7a7a7;
+}
+
+a.adspot_green_btn:hover {
+	border: 1px solid #204e00;
+	border-radius: 2px;
+	background: -moz-linear-gradient(#47ab00, #378500);
+	background: -webkit-linear-gradient(#47ab00, #378500);
+	color: #fff
 }
 
 .adspot_edit_btn i,.adspot_tab1 i,.adspot_tab2 i,.adspot_tab_action i,.adspot_edit_btn i
@@ -281,6 +309,10 @@ a.adspot_tab_selected,a.adspot_tab_selected:hover {
 	color: #FFFFFF;
 	text-shadow: 0 1px 0 black;
 	border: 1px solid #317500;
+}
+
+.adspot_tab_con {
+	position: relative
 }
 
 .adspot_tab_con label {
@@ -370,7 +402,7 @@ a.adspot_tab_selected,a.adspot_tab_selected:hover {
 	padding: 6px 0px;
 }
 
-.adspot_search_items li:hover {
+.adspot_search_items .adspot_search_item:hover {
 	background: #f4f4f4;
 }
 
@@ -383,4 +415,8 @@ a.adspot_tab_selected,a.adspot_tab_selected:hover {
 
 .adspot_search_items p {
 	margin: 3px 0px;
+}
+
+.adspot_search_item_selected {
+	background: #E0E0E0
 }

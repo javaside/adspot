@@ -167,7 +167,7 @@
 				
 				addSpotDiv.css({left: left, top: top});
 				addSpotDiv.attr("adspot_edit_pdct_id", spotId);
-				addSpotDiv.show(400);
+				addSpotDiv.show(600);
 			});
 		}
 		

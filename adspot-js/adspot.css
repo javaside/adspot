@@ -420,3 +420,7 @@ a.adspot_tab_selected,a.adspot_tab_selected:hover {
 .adspot_search_item_selected {
 	background: #E0E0E0
 }
+
+.confirm_div {
+	z-index: 1999;
+}

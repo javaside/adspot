@@ -21,7 +21,7 @@
 		 * 构建增加spot表单DIV
 		 */
 		var getAddEditSpotFormDiv = function(){
-			var spotForm = '<div class="adspot_layer_info">' +
+			var spotForm = '<div class="adspot_layer_info add-edit-adspot">' +
 						   '<div class="adspot_layer_inner">' +
 						   '<div class="adspot_tab"><a class="adspot_tab1 adspot_tab_selected"><i></i>商品锚点</a><a class="adspot_tab2"><i class="adspot_i2"></i>链接锚点</a></div>' + 
 						   '<div class="adspot_tab_con tab_con_product">' +
@@ -97,7 +97,7 @@
 			var div = '<div class="adspot_layer_info confirm_div">' +
 					  '<div class="adspot_layer_inner">' +
 					  '<p style="text-align:center">你确定你要删除该锚点嘛？</p>' +
-					  '</div><div class="adspot_tab_action"><a title="取消" class="adspot_edit_btn" href="#">取 消</a><a title="确定" class="adspot_edit_btn" href="#">确 定</a></div></div>';
+					  '</div><div class="adspot_tab_action"><a title="取消" class="adspot_edit_btn adspot_edit_btn_cancel">取 消</a><a title="确定" class="adspot_edit_btn adspot_edit_btn_submit">确 定</a></div></div>';
 			
 			return div;
 		}
@@ -126,20 +126,62 @@
 		}
 		
 		/**
+		 * 绑定confirm事件
+		 */
+		var bindConfirmDivEvent = function(confirmDiv){
+			confirmDiv.find(".adspot_edit_btn_cancel").click(function(){
+				var cfDiv = $(this).parent().parent();
+				var spotId = cfDiv.attr("edit-adspot-id");
+				var pIdDiv = $("div[spot-div-id=" + spotId + "]"); //商品的详细DIV
+				
+				cfDiv.hide();
+				bindShowSpotEvent(pIdDiv);
+			});
+			
+			confirmDiv.find(".adspot_edit_btn_submit").click(function(){
+				var cfDiv = $(this).parent().parent();
+				var spotId = cfDiv.attr("edit-adspot-id");
+				var pIdDiv = $("div[spot-div-id=" + spotId + "]"); //商品的详细DIV
+				
+				var adSpotIcon = cfDiv.parent().find(".adspot_icon[adsopt-product-id='" + spotId + "']")
+				adSpotIcon.remove(); //删除对应的锚点
+				
+				cfDiv.hide();
+				pIdDiv.hide();
+				bindShowSpotEvent(pIdDiv);
+			});
+		}
+		
+		/**
 		 * 绑定展示广告的删除按钮事件。
 		 */
 		var bindAdspotDeleteButtonClick = function(){
 			
 			$(".adspot_layer_info .adspot_edit_area .adspot_edit_delete").click(function(){
-				var offset = $(this).parent().parent().parent().offset();
+				var adspotDetailDiv = $(this).parent().parent().parent();
+				var spotId = adspotDetailDiv.attr("spot-div-id");
 				
-				var cdiv = $(".confirm_div");
+				//获取当前广告层是属于那个图片的
+				var adSpotImgIndex = adspotDetailDiv.attr("adspot-img-index");
+				var wraDiv = $(".adspot_wrapper[adspot-img-index='" + adSpotImgIndex + "']");
 				
-				var top  = offset.top;
-				top = (top + top/2);
+				var cdiv = wraDiv.find(".confirm_div");
 				
-				cdiv.css({left: offset.left, top: top});
-				//cdiv.show();
+				var adSpotIcon = wraDiv.find(".adspot_icon[adsopt-product-id='" + spotId + "']")
+				
+				var left = parseInt(adSpotIcon.css("left")) + 20;
+				var top =  parseInt(adSpotIcon.css("top"));
+				
+				var h =  adspotDetailDiv.height();
+				cdiv.css({left: left, top: (top + h/2)});
+				cdiv.attr("edit-adspot-id", spotId); //设置要操作的ID，方便以后处理
+				cdiv.show();
+				
+				var pIdDiv = $("div[spot-div-id=" + spotId + "]");
+				pIdDiv.unbind("hover");
+				
+				bindConfirmDivEvent(cdiv); //绑定确定，取消事件。
+				
 			});
 		}
 		
@@ -157,7 +199,7 @@
 				var adSpotImgIndex = adspotDetailDiv.attr("adspot-img-index");
 				var wraDiv = $(".adspot_wrapper[adspot-img-index='" + adSpotImgIndex + "']");
 				
-				var addSpotDiv = wraDiv.find(".adspot_layer_info");
+				var addEditSpotDiv = wraDiv.find(".add-edit-adspot");
 				var adSpotIcon = wraDiv.find(".adspot_icon[adsopt-product-id='" + spotId + "']")
 				
 				var left = adSpotIcon.css("left");
@@ -165,9 +207,9 @@
 				
 				adspotDetailDiv.hide();
 				
-				addSpotDiv.css({left: left, top: top});
-				addSpotDiv.attr("adspot_edit_pdct_id", spotId);
-				addSpotDiv.show(600);
+				addEditSpotDiv.css({left: left, top: top});
+				addEditSpotDiv.attr("adspot_edit_pdct_id", spotId);
+				addEditSpotDiv.show(600);
 			});
 		}
 		
@@ -229,19 +271,19 @@
 			
 			warDiv.find(".adspot_tab_action .cancel").click(function(){
 				var warDiv = $(this).parent().parent().parent();
-				var layerInfo = warDiv.find("div.adspot_layer_info");
+				var addEditAdspotDiv = warDiv.find("div.add-edit-adspot");
 				
 				warDiv.find(".adspot_icon_space").remove();
 				
-				var editSpotId = layerInfo.attr("adspot_edit_pdct_id");
+				var editSpotId = addEditAdspotDiv.attr("adspot_edit_pdct_id");
 				
 				if(!editSpotId){
 					bindCreateAdspotEvent(warDiv.find("img.adSpotImgWrap"));
 				}
 				
-				layerInfo.removeAttr("adspot_edit_pdct_id");
+				addEditAdspotDiv.removeAttr("adspot_edit_pdct_id");
 				
-				layerInfo.hide();
+				addEditAdspotDiv.hide();
 				restAdspotSearchItemClass(warDiv);
 			});
 			
@@ -252,13 +294,13 @@
 				var adTab = warDiv.find(".adspot_layer_info .adspot_layer_inner .adspot_tab .adspot_tab_selected");
 				var adspotType = adTab.hasClass("adspot_tab2") ? "adspot_icon_link" : "adspot_icon_product";
 				
-				var layerInfo = warDiv.find("div.adspot_layer_info");
+				var addEditAdspotDiv = warDiv.find("div.add-edit-adspot");
 				
-				var editSpotId = layerInfo.attr("adspot_edit_pdct_id");
-				layerInfo.removeAttr("adspot_edit_pdct_id");
+				var editSpotId = addEditAdspotDiv.attr("adspot_edit_pdct_id");
+				addEditAdspotDiv.removeAttr("adspot_edit_pdct_id");
 				
 				if(editSpotId){
-					layerInfo.hide();
+					addEditAdspotDiv.hide();
 					return;
 				}
 				
@@ -272,7 +314,7 @@
 				
 				$(document.body).append(getSpotDiv(spot));
 				
-				layerInfo.hide();
+				addEditAdspotDiv.hide();
 				bindCreateAdspotEvent(warDiv.find("img.adSpotImgWrap"));
 				bindAdspotEditButtonClick(); // 绑定展示广告，右下脚的编辑按钮事件。
 			});
@@ -294,7 +336,7 @@
 			    var dotImg = addDotImgDiv(spot, true);
 			    img.after(dotImg);
 			    
-			    var addDiv = img.parent().find(".adspot_layer_info");
+			    var addDiv = img.parent().find(".add-edit-adspot");
 			    addDiv.css({left: (left + 25),top: (top +  12)});
 			    
 			    unbindCreateAdspotEvent(img);
@@ -312,7 +354,7 @@
 		var unbindCreateAdspotEvent = function(img){
 			img.css('cursor','default');
 			img.unbind('click');
-			img.parent().find(".adspot_layer_info").hide();
+			img.parent().find(".add-edit-adspot").hide();
 		}
 
 		
@@ -345,6 +387,7 @@
 			});
 		}
 		
+		
 		/**
 		 * 绑定展示广告事件
 		 */
@@ -369,6 +412,7 @@
 			var wraDiv = img.parent();
 			wraDiv.find("div.adspot_icon").unbind("hover");
 		}
+		
 		/**
 		 * 绑定锚点悬浮事件
 		 */
@@ -447,6 +491,7 @@
 			img.after(logoDiv); 
 			img.after(addDotSpotDiv); //右上角编辑加号。
 			img.after(addEditSpotFormDiv); //增加、编辑adspot层。
+			img.after(confirmDiv()); //取消，确定对话框。
 			
 			//绑定各种事件
 			bindAddSpotDivClick(img); //绑定右上角 点击 事件，以便图片处于编辑或者查看状态。
@@ -504,8 +549,6 @@
 			
 			bindAdspotEditButtonClick();
 			bindAdspotDeleteButtonClick();
-			
-			$(document.body).append(confirmDiv());
 			
 		})();
 	};

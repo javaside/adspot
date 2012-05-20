@@ -156,8 +156,9 @@
 		 * 绑定展示广告的删除按钮事件。
 		 */
 		var bindAdspotDeleteButtonClick = function(){
-			
-			$(".adspot_layer_info .adspot_edit_area .adspot_edit_delete").click(function(){
+			var delBtn = $(".adspot_layer_info .adspot_edit_area .adspot_edit_delete");
+			delBtn.unbind("click");
+			delBtn.click(function(){
 				var adspotDetailDiv = $(this).parent().parent().parent();
 				var spotId = adspotDetailDiv.attr("spot-div-id");
 				
@@ -317,6 +318,7 @@
 				addEditAdspotDiv.hide();
 				bindCreateAdspotEvent(warDiv.find("img.adSpotImgWrap"));
 				bindAdspotEditButtonClick(); // 绑定展示广告，右下脚的编辑按钮事件。
+				bindAdspotDeleteButtonClick(); //绑定展示广告，右下角的删除按钮事件。
 			});
 		}
 		

@@ -102,6 +102,7 @@
 			return div;
 		}
 		
+		
 		/**
 		 * 悬浮广告DIV
 		 */
@@ -126,6 +127,46 @@
 		}
 		
 		/**
+		 * 删除页面覆盖
+		 */
+		var removeOverlay = function(){
+			$(document.body).css('overflow', 'auto')
+			$("body div.adspot-overlay").remove();
+		}
+		
+		/**
+		 * 创建页面覆盖
+		 */
+		var createOverlay = function(){
+		    var iTop = 0;
+		    if($.browser.mozilla) {
+		      iTop = $('html').scrollTop();
+		    } else {
+		      iTop = $(document.body).scrollTop();
+		    } 
+
+		  var overlay = $('<div></div>').addClass("adspot-overlay");
+
+	      overlay
+	        .css({
+	          background: '#000000',
+	          opacity: 0.5,
+	          top: iTop,
+	          left: 0,
+	          width: '100%',
+	          height: '100%',
+	          position: 'absolute',
+	          zIndex: 1998,
+	          display: 'none',
+	          overflow: 'hidden'
+	        });
+
+			$(document.body).append(overlay);
+			$(document.body).css('overflow', 'hidden')
+			$("body div.adspot-overlay").show();
+		}
+		
+		/**
 		 * 绑定confirm事件
 		 */
 		var bindConfirmDivEvent = function(confirmDiv){
@@ -136,6 +177,7 @@
 				
 				cfDiv.hide();
 				bindShowSpotEvent(pIdDiv);
+				removeOverlay();
 			});
 			
 			confirmDiv.find(".adspot_edit_btn_submit").click(function(){
@@ -149,6 +191,7 @@
 				cfDiv.hide();
 				pIdDiv.hide();
 				bindShowSpotEvent(pIdDiv);
+				removeOverlay();
 			});
 		}
 		
@@ -158,7 +201,9 @@
 		var bindAdspotDeleteButtonClick = function(){
 			var delBtn = $(".adspot_layer_info .adspot_edit_area .adspot_edit_delete");
 			delBtn.unbind("click");
-			delBtn.click(function(){
+			delBtn.click(function(evt){
+				evt.preventDefault();
+				 
 				var adspotDetailDiv = $(this).parent().parent().parent();
 				var spotId = adspotDetailDiv.attr("spot-div-id");
 				
@@ -176,6 +221,8 @@
 				var h =  adspotDetailDiv.height();
 				cdiv.css({left: left, top: (top + h/2)});
 				cdiv.attr("edit-adspot-id", spotId); //设置要操作的ID，方便以后处理
+				
+				createOverlay();
 				cdiv.show();
 				
 				var pIdDiv = $("div[spot-div-id=" + spotId + "]");
@@ -448,7 +495,7 @@
 
 							if(pIdDiv.attr("show-flag") !== "1"){
 								pIdDiv.attr("show-flag","0");
-								pIdDiv.fadeOut(200);
+								pIdDiv.fadeOut(400);
 							}
 						},200);
 					}

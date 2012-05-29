@@ -2,6 +2,7 @@
 (function() {
 	var wbCode = window['__adspot_wb_code'];
 	var resHost = window['__adspot_res_host'];
+	var adspotData = {};
 	
 	/**
 	 * 获取字母数字随机数。
@@ -13,6 +14,28 @@
 			  tmp  +=  x.charAt(Math.ceil(Math.random()*100000000)%x.length);
 		  }
 		  return  tmp;
+	}
+	
+	/**
+	 * 把相对路径转换成URL绝对路径
+	 */
+	var getAbsolutUrl = function(src){
+		if(/^((https?):\/\/)/i.test(src)){
+			return src;
+		}
+		
+		if(src.indexOf("/") == 0){
+			return location.protocol + "//" + location.host + src;
+		}
+		
+		var dt = location.href.split("?")[0].split("/");
+		dt.length--;
+		while(src.indexOf("../") == 0){
+			src = src.slice(3);
+		    dt.length--;
+		}
+		
+		return (dt.join("/") + "/" + src);
 	}
 	
 	var startAdspot =  function($){	
@@ -39,16 +62,16 @@
 						   '<div style="display: none;" class="adspot_search_noresult"><p>你要寻找的商品不存在，请试试其他关键字 </p>' +
 						   '或者 <a href="#" class="adspot_edit_btn adspot_add_btn"><i></i> 添加商品</a></div>' +
 						   '<div style="display: none;" class="adspot_search_loader">' +
-						   '<img src="res/spinner-white.gif" alt="ajax spinner" class="adspot_search_spinner">' +
+						   '<img src="' + resHost + 'res/spinner-white.gif" alt="ajax spinner" class="adspot_search_spinner">' +
 						   '</div>' +
 						   '<ul style="display: block;" class="adspot_search_items">' +
-						   '<li class="adspot_search_item"><img src="res/pro.jpg" class="adspot_search_image">' +
+						   '<li class="adspot_search_item"><img src="' + resHost + 'res/pro.jpg" class="adspot_search_image">' +
 						   '<div class="adspot_search_info"><h2>珠光纸婚礼鸾凤</h2><p>￥35.2</p><p>淘宝网</p></div></li>' +
-						   '<li class="adspot_search_item"><img src="res/pro.jpg" class="adspot_search_image">' +
+						   '<li class="adspot_search_item"><img src="' + resHost + 'res/pro.jpg" class="adspot_search_image">' +
 						   '<div class="adspot_search_info"><h2>珠光纸婚礼鸾凤</h2><p>￥35.2</p><p>淘宝网</p></div></li>' +
-						   '<li class="adspot_search_item"><img src="res/pro.jpg" class="adspot_search_image">' +
+						   '<li class="adspot_search_item"><img src="' + resHost + 'res/pro.jpg" class="adspot_search_image">' +
 						   '<div class="adspot_search_info"><h2>珠光纸婚礼鸾凤</h2><p>￥35.2</p><p>淘宝网</p></div></li>' +
-						   '<li class="adspot_search_item"><img src="res/pro.jpg" class="adspot_search_image">' +
+						   '<li class="adspot_search_item"><img src="' + resHost + 'res/pro.jpg" class="adspot_search_image">' +
 						   '<div class="adspot_search_info"><h2>珠光纸婚礼鸾凤</h2><p>￥35.2</p><p>淘宝网</p></div></li>' +
 						   '</ul>' +
 						   '</div>'	+
@@ -64,7 +87,7 @@
 		var getLinkSpotDiv = function(spot){
 			var div = '<div style="left:170px;top:40px" class="adspot_layer_info adspot_info_detail" spot-div-id=' + spot.id +'>' +
 					  '<div class="adspot_layer_inner1">' +
-					  '<img class="adspot_link_pic" src="res/pro.jpg">' +
+					  '<img class="adspot_link_pic" src="' + resHost + 'res/pro.jpg">' +
 					  '<a class="adspot_link_info" href="#"><p>这个真心不错，很简洁的，就是盒子的颜色太淡了。用在婚礼上我觉得还不够喜庆，平时见了真是我的菜啊。淡淡地珠光很漂亮啊，在这个和另一款粉色薰衣草中犹豫好久的</p></a>' + 
 					  '<div class="adspot_edit_area"><a title="编辑信息" class="adspot_edit_btn adspot_edit_button"><i></i></a><a title="删除锚点" class="adspot_edit_btn adspot_edit_edit adspot_edit_delete"><i></i></a></div>' +
 					  '</div>' +
@@ -78,7 +101,7 @@
 		var getProductSpotDiv = function(spot){
 			var div = '<div style="left:20px;top:230px" class="adspot_layer_info adspot_info_detail" spot-div-id=' + spot.id +'>' + 
 					  '<div class="adspot_layer_inner1">' +
-					  '<div class="adspot_layer_left"><img alt="产品图片" src="res/pro.jpg"></div>' +
+					  '<div class="adspot_layer_left"><img alt="产品图片" src="' + resHost + 'res/pro.jpg"></div>' +
 					  '<div class="adspot_layer_right"><h1>珠光纸婚礼鸾凤和鸣喜糖盒</h1>' +
 					  '<div class="adspot_layer_price"><label>购买价格：</label>￥35.2</div>' +
 					  '<div class="adspot_layer_source"><label>信息来源：</label>淘宝网</div>' +
@@ -583,21 +606,53 @@
 		};
 		
 		
-		
 		//查找所有图片(img),过滤不符合尺寸的图片
 		(function(){
+			var imgArr = new Array(); //存储符合规则的图片img对象。
+			var imgIndex = 0;
+			var imgArrJson = ""; //把符合规则的图片数据包装成josn数据格式字符串。
+			
 			$("img").each(function(i){
 				var _self = $(this);
 				var width = _self.width();
 				var height = _self.height();
 				
-				if(width >= 200 && width <= 800 && height >= 200 && height <= 800){
-					initImg(_self, i);
+				if(width >= 200 && height >= 200){
+					imgArr[imgIndex] = _self;
+					
+					var src  = getAbsolutUrl(_self.attr("src"));
+					
+					if(imgArrJson.indexOf(src) < 0){
+						var title = _self.attr("title") ? _self.attr("title") : (_self.attr("alt") ? _self.attr("alt") : "");
+						var w = _self.width();
+						var h = _self.height();
+						
+						var strVal = "";
+						
+						if(imgIndex > 0){
+							strVal = ",";
+						}
+						
+						strVal += '{"title":"' + title + '","src":"' + src + '","width":' + w + ',"height":' + h +'}';
+						
+						imgArrJson += strVal;
+					}
+					imgIndex++;
 				}
 			});
 			
-			bindAdspotEditButtonClick();
-			bindAdspotDeleteButtonClick();
+			var length = imgArr.length;
+			
+			if(length > 0){
+				imgArrJson = "[" + imgArrJson + "]";
+				
+				for(var i=0; i < length; i++){
+					initImg(imgArr[i], i);
+				}
+			}
+			
+			bindAdspotEditButtonClick(); //绑定展示广告层右下角的编辑点击事件
+			bindAdspotDeleteButtonClick(); //绑定展示广告层右下角的删除点击事件
 			
 		})();
 	};

@@ -1,7 +1,9 @@
 
 (function() {
+	var dataHost = "http://www.adspot.com/";
 	var wbCode = window['__adspot_wb_code'];
 	var resHost = window['__adspot_res_host'];
+	
 	var adspotData = {};
 	
 	/**
@@ -52,11 +54,11 @@
 						   '<input type="text" placeholder="比如：婚纱、地毯等"><a class="adspot_search_btn"></a></div>' +
 						   '<div class="adspot_tab_con tab_con_link" style="display:none;">' +
 						   '<label>链接地址：</label>' +
-						   '<input type="text" placeholder="请输入链接地址">' +
+						   '<input type="text" class="link_addr" placeholder="请输入链接地址">' +
 						   '<label>特色图片：</label>' +
-						   '<input type="text" placeholder="输入图片的URL">' +
+						   '<input type="text" class="link_thumb" placeholder="输入图片的URL">' +
 						   '<label>一句话描述：</label>' +
-						   '<textarea placeholder="请输入描述" type="text"></textarea></div>' +
+						   '<textarea class="link_desc" placeholder="请输入描述" type="text"></textarea></div>' +
 						   '</div>' +
 						   '<div style="display: block; opacity: 1;" class="adspot_search_box">' +
 						   '<div style="display: none;" class="adspot_search_noresult"><p>你要寻找的商品不存在，请试试其他关键字 </p>' +
@@ -88,7 +90,7 @@
 			var div = '<div style="left:170px;top:40px" class="adspot_layer_info adspot_info_detail" spot-div-id=' + spot.id +'>' +
 					  '<div class="adspot_layer_inner1">' +
 					  '<img class="adspot_link_pic" src="' + resHost + 'res/pro.jpg">' +
-					  '<a class="adspot_link_info" href="#"><p>这个真心不错，很简洁的，就是盒子的颜色太淡了。用在婚礼上我觉得还不够喜庆，平时见了真是我的菜啊。淡淡地珠光很漂亮啊，在这个和另一款粉色薰衣草中犹豫好久的</p></a>' + 
+					  '<a class="adspot_link_info" href="' + spot.link_addr + '"><p>' + spot.link_desc + '</p></a>' + 
 					  '<div class="adspot_edit_area"><a title="编辑信息" class="adspot_edit_btn adspot_edit_button"><i></i></a><a title="删除锚点" class="adspot_edit_btn adspot_edit_edit adspot_edit_delete"><i></i></a></div>' +
 					  '</div>' +
 					  '</div>';
@@ -286,15 +288,15 @@
 		
 		//包装图片的锚点
 		var wrapperProductDots = function(img){
-			var dotObjs = getProductDots(img);
-			
-			if(dotObjs.dots){
-				$.each(dotObjs.dots, function(i, spot){
-					var dotImg = addDotImgDiv(spot, false);
-					img.after(dotImg);
-					
-					if(!$(document.body).find("div.adspot_info_detail").is("div[spot-div-id=" + spot.id + "]")){
-						$(document.body).append(getSpotDiv(spot));
+			if(adspotData){
+				$.each(adspotData, function(i, spot){
+					if(spot.type){
+						var dotImg = addDotImgDiv(spot, false);
+						img.after(dotImg);
+						
+						if(!$(document.body).find("div.adspot_info_detail").is("div[spot-div-id=" + spot.id + "]")){
+							$(document.body).append(getSpotDiv(spot));
+						}
 					}
 				});
 			}
@@ -360,6 +362,8 @@
 			
 			warDiv.find(".adspot_tab_action .submit").click(function(){
 				var warDiv = $(this).parent().parent().parent();
+				var imgWra = warDiv.find("img.adSpotImgWrap");
+				
 				restAdspotSearchItemClass(warDiv);
 				
 				var adTab = warDiv.find(".adspot_layer_info .adspot_layer_inner .adspot_tab .adspot_tab_selected");
@@ -379,7 +383,26 @@
 				var adType = adspotType === "adspot_icon_link" ? "LINK" : "PDCT";
 				var spot = {id: pid, type: adType};
 				
+				if(adType === "LINK"){
+					spot.link_addr = addEditAdspotDiv.find(".tab_con_link input.link_addr").val();
+					spot.link_thumb = addEditAdspotDiv.find(".tab_con_link input.link_thumb").val();
+					spot.link_desc = addEditAdspotDiv.find(".tab_con_link textarea.link_desc").val();
+				}
+				
+				spot.wbCode = wbCode;
+				
 				var adDot = warDiv.find(".adspot_icon_space")
+				spot.left = adDot.offset.left;
+				spot.top  = adDot.offset.top;
+				spot.imgWidth = imgWra.width();
+				spot.imgHeight = imgWra.height();
+				spot.imgTitle = imgWra.attr("title") ? imgWra.attr("title") : (imgWra.attr("alt") ? imgWra.attr("alt") : "");
+				spot.imgSrc  = getAbsolutUrl(imgWra.attr("src"));
+				
+				var saveUrl = dataHost + "data/spot-save.php";
+				$.post(saveUrl,spot);
+				
+				
 				adDot.attr("adsopt-product-id", pid);
 				adDot.attr("class", "adspot_icon " + adspotType);
 				
@@ -646,9 +669,15 @@
 			if(length > 0){
 				imgArrJson = "[" + imgArrJson + "]";
 				
-				for(var i=0; i < length; i++){
-					initImg(imgArr[i], i);
-				}
+				var dataUrl = dataHost + "data/spot-data.php";
+				
+				$.post(dataUrl, {wbcode:wbCode, imgs:imgArrJson}, function(imgJson){
+					adspotData = imgJson;
+					for(var i=0; i < length; i++){
+						initImg(imgArr[i], i);
+					}
+				});
+				
 			}
 			
 			bindAdspotEditButtonClick(); //绑定展示广告层右下角的编辑点击事件

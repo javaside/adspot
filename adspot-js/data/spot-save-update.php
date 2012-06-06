@@ -17,13 +17,12 @@
 	$left = _post("left");
 	$top  = _post("top");
 	$sid = _post('id');
+	$pid = _post("pid"); //商品id
 	
 	$imgSrc = _post("imgSrc");
 	$imgWidth = _post("imgWidth");
 	$imgHeight = _post("imgHeight");
 	$imgTitle = _post("imgTitle");
-	
-	var_dump($_POST);
 	
 	if(empty($wbcode) || empty($type)){
 		exit;
@@ -46,7 +45,7 @@
 		$taggedImage['wid'] = $website['wid'];
 		$taggedImage['remote_addr'] = $imgSrc;
 		$taggedImage['width']    = $imgWidth;
-		$taggedImage['heidht']   = $imgHeight;
+		$taggedImage['height']   = $imgHeight;
 		$taggedImage['title']    = $imgTitle;
 		$imageDal->saveImage($taggedImage);
 	}
@@ -61,13 +60,21 @@
 		$spot['link_desc'] = $link_desc;
 		$spot['link_thumb'] = $link_thumb;  
 		$spot['link_title'] = $link_title;
-		 
-		if(is_numeric($sid) && !empty($spotDal->getSpot($sid))){
+		$spot['marginy'] = $top;
+		$spot['marginx'] = $left;
+		$spot['pid']  = $pid;
+		$spot['imgid'] = $taggedImage['imgid'];
+		
+		if(is_numeric($sid)){
+			$tspot = $spotDal->getSpot($sid);
+		}
+		if(!empty($tspot)){
 			$spotDal->update($spot);
 		}else{
 			$spotDal->save($spot);
 		}
 	}
 	
+	echo "ok";
 	mysql_close($con);
 ?>

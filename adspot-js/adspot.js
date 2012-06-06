@@ -389,18 +389,20 @@
 					spot.link_desc = addEditAdspotDiv.find(".tab_con_link textarea.link_desc").val();
 				}
 				
-				spot.wbCode = wbCode;
+				spot.wbcode = wbCode;
 				
 				var adDot = warDiv.find(".adspot_icon_space")
-				spot.left = adDot.offset.left;
-				spot.top  = adDot.offset.top;
+				spot.left = adDot.css("left").replace("px","");
+				spot.top  = adDot.css("left").replace("px","");
 				spot.imgWidth = imgWra.width();
 				spot.imgHeight = imgWra.height();
 				spot.imgTitle = imgWra.attr("title") ? imgWra.attr("title") : (imgWra.attr("alt") ? imgWra.attr("alt") : "");
 				spot.imgSrc  = getAbsolutUrl(imgWra.attr("src"));
 				
-				var saveUrl = dataHost + "data/spot-save.php";
-				$.post(saveUrl,spot);
+				var saveUrl = dataHost + "data/spot-save-update.php";
+				$.post(saveUrl, spot, function(d){
+					alert(d);
+				});
 				
 				
 				adDot.attr("adsopt-product-id", pid);

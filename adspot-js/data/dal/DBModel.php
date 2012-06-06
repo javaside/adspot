@@ -25,7 +25,7 @@
  	 * @param unknown_type $str
  	 */
  	function safeStr($str){
- 		return mysql_real_escape_string($str, $this->conn);
+ 		return empty($str)? "null": (is_numeric($str)? $str : "'" . mysql_real_escape_string($str, $this->conn) . "'");
  	}
  	
  }

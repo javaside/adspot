@@ -1,10 +1,10 @@
 
 (function() {
-	var dataHost = "http://www.adspot.com/";
+	var dataHost = "http://www.adspot.com/";//操作数据库HOST
 	var wbCode = window['__adspot_wb_code'];
 	var resHost = window['__adspot_res_host'];
 	
-	var adspotData = {};
+	var adspotData = {};  //锚点的json 数据
 	
 	/**
 	 * 获取字母数字随机数。
@@ -43,7 +43,7 @@
 	var startAdspot =  function($){	
 		
 		/**
-		 * 构建增加spot表单DIV
+		 * 构建增加spot表单DIV, 搜索获取的数据替换 adspot_search_items 即可
 		 */
 		var getAddEditSpotFormDiv = function(){
 			var spotForm = '<div class="adspot_layer_info add-edit-adspot">' +
@@ -145,6 +145,7 @@
 			return {dots:[{id:1,left:20,top:30,type:'LINK'},{id:2,left:10,top:80,type:'PDCT'},{id:3,left:90,top:100,type:'LINK'}]};
 		}
 		
+		// 增加锚点DIV,spot就是点的json对象，show表示，是否显示。
 		var addDotImgDiv = function(spot, show){
 			var display = (show) ? "display:block;" : "display:none;";
 			var clas = (spot.type === "LINK") ? "adspot_icon_link" : ((spot.type === "PDCT") ? "adspot_icon_product" : "adspot_icon_space");
@@ -491,7 +492,7 @@
 		var bindShowSpotEvent = function(pId){
 			pId.hover(
 					function(){
-						//show-flag = 1表示，该DIV真正显示
+						//show-flag = 1表示，该DIV正在显示
 						pId.attr("show-flag", "1");
 					},
 					function(){
@@ -671,14 +672,14 @@
 			if(length > 0){
 				imgArrJson = "[" + imgArrJson + "]";
 				
-				var dataUrl = dataHost + "data/spot-data.php";
+				//var dataUrl = dataHost + "data/spot-data.php";
 				
-				$.post(dataUrl, {wbcode:wbCode, imgs:imgArrJson}, function(imgJson){
-					adspotData = imgJson;
+				//$.post(dataUrl, {wbcode:wbCode, imgs:imgArrJson}, function(imgJson){
+				//	adspotData = imgJson;
 					for(var i=0; i < length; i++){
 						initImg(imgArr[i], i);
 					}
-				});
+				//});
 				
 			}
 			
